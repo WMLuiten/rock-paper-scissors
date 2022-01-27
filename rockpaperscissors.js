@@ -14,43 +14,23 @@ function computerPlay() {
 }
 
 function playRound(playerSelection, computerSelection) {
-    const tie = `Tie breaker on ${playerSelection}`;
-    const victory = `You win! ${playerSelection} beats ${computerSelection}!`;
-    const loss = `You lose! ${computerSelection} beats ${playerSelection}!`;
+    let score; // [player,computer]
     // check if tie
-    if(playerSelection === computerSelection){
-        score = [0,0];
-        console.log(tie);
-    }
+    if(playerSelection === computerSelection) score = [0,0];
     // if player rock
     else if(playerSelection == 'Rock'){
-        if(computerSelection == 'Paper'){
-            score = [0,1];
-            console.log(loss);
-        }
-        else {score = [1,0];
-            console.log(victory);
-        }      
+        if(computerSelection == 'Paper')score = [0,1];
+        else score = [1,0];  
     }
     // if player paper
     else if(playerSelection == 'Paper'){
-        if(computerSelection == 'Scissors'){
-            score = [0,1];
-            console.log(loss);
-        }
-        else {score = [1,0];
-            console.log(victory);
-        }
+        if(computerSelection == 'Scissors') score = [0,1];
+        else score = [1,0];
     }
-    // if player scissors
-    else if(playerSelection == 'Scissors'){
-        if(computerSelection == 'Rock'){
-            score = [0,1];
-            console.log(loss);
-        }
-        else {score = [1,0];
-            console.log(victory);
-        }
+    // if player scissors (only other option)
+    else {
+        if(computerSelection == 'Rock') score = [0,1];
+        else score = [1,0];
     }
     return score;
 }
@@ -58,62 +38,55 @@ function playRound(playerSelection, computerSelection) {
 function getPlayerInput(){
     const options = ["Rock", "Paper", "Scissors"];
     // input through prompt
-    let playerSelection = window.prompt("Rock, paper, scissors? Enter q to quit.");
-    if(playerSelection === null){
+    let playerInput = window.prompt("Rock, paper, scissors? Enter q to quit.");
+    if(!playerInput){
         console.log('Thank you for playing.');
         return 'quit'
     }
     // make case insensitive
-    playerSelection = playerSelection.charAt(0).toUpperCase() + playerSelection.slice(1).toLowerCase();
+    playerInput = playerInput.charAt(0).toUpperCase() + playerInput.slice(1).toLowerCase();
     // check if the player wants to quit (entered q)
-    if(playerSelection === 'Q' ){
+    if(playerInput === 'Q' ){
         console.log('Thank you for playing.');
         return 'quit'
     }
     // check if input is valid options (Rock, Paper, Scissors)
-    else if(!options.includes(playerSelection)){
+    else if(!options.includes(playerInput)){
         console.log('No valid input, please try again');
         return null;
     }
-    else{return playerSelection; 
+    else{return playerInput; 
     }  
 }
 
 function game(){
-    let computerSelection;
-    let playerSelection;
-    let result = [0, 0];
     let playerScore = 0;
     let computerScore = 0;
-    let totalScore = 0;
-    let stop = false;
     // loop until 5 games are won by someone
-    while (totalScore < 5 && stop == false){
+    while (playerScore + computerScore < 5){
         // get player input
-        playerSelection = getPlayerInput();
-        if(playerSelection == null){
-            continue;
-        }
-        else if(playerSelection == 'quit'){
-            stop = true; 
-            break;
-        }
+        const playerSelection = getPlayerInput();
+        if(!playerSelection) continue;
+        if(playerSelection == 'quit') break;
         // determine computer selection
-        computerSelection = computerPlay();
+        const computerSelection = computerPlay();
         // play round
-        result = playRound(playerSelection,computerSelection);
+        const result = playRound(playerSelection,computerSelection);
+        // give feedback for round
+        if(result[0] === 1) console.log(`You win! ${playerSelection} beats ${computerSelection}!`);
+        else{
+            if(result[1] === 0) console.log(`Tie breaker on ${playerSelection}`);
+            else console.log(`You lose! ${computerSelection} beats ${playerSelection}!`);
+        }
         // update score
         playerScore += result[0];
         computerScore += result[1];
-        totalScore = playerScore + computerScore;
-        console.log(`You: ${playerScore}\nComputer: ${computerScore}`)
+        console.log(`You: ${playerScore}\nComputer: ${computerScore}`);
     }
     // announce winner at end
-    if(totalScore < 5){
-    }
-    else if(playerScore > computerScore){
-        console.log(`You won! ${playerScore} - ${computerScore}`)
-    }
-    else {console.log(`You lost! ${playerScore} - ${computerScore}`)
+    if(playerScore + computerScore  < 5){
+    } else if(playerScore > computerScore){
+        console.log(`You won! ${playerScore} - ${computerScore}`);
+    } else {console.log(`You lost! ${playerScore} - ${computerScore}`);
     }
 }
