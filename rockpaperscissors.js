@@ -67,7 +67,7 @@ function game(){
         // get player input
         const playerSelection = getPlayerInput();
         if(!playerSelection) continue;
-        if(playerSelection == 'quit') break;
+        if(playerSelection == 'quit') return;
         // determine computer selection
         const computerSelection = computerPlay();
         // play round
@@ -84,8 +84,7 @@ function game(){
         console.log(`You: ${playerScore}\nComputer: ${computerScore}`);
     }
     // announce winner at end
-    if(playerScore + computerScore  < 5){
-    } else if(playerScore > computerScore){
+    if(playerScore > computerScore){
         console.log(`You won! ${playerScore} - ${computerScore}`);
     } else {console.log(`You lost! ${playerScore} - ${computerScore}`);
     }
